@@ -23,7 +23,7 @@
     "migration:generate": "npm run typeorm -- -d ./db/typeorm.config.ts migration:generate ./db/migrations/mig",
     "migration:create": "npm run typeorm -- migration:create ./db/migrations/mig",
     "migration:revert": "npm run typeorm -- -d db/typeorm.config.ts migration:revert",
-    "typeorm:drop": "npx typeorm-ts-node-esm schema:drop -d ./db/typeorm.config.ts"
+    "typeorm:drop": "npm run typeorm -- schema:drop -d ./db/typeorm.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

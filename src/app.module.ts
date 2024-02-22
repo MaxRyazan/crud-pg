@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ArticleModule } from './article/article.module';
+import { PublisherModule } from './publisher/publisher.module';
 
 @Module({
   imports: [
@@ -21,9 +21,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: true
       }),
     }),
+    ArticleModule,
+    PublisherModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {
 }

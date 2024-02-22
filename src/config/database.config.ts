@@ -7,7 +7,10 @@ export default registerAs('database', () => ({
   username: 'postgres',
   password: '123',
   database: 'for-nestjs',
-  entities: [__dirname + '/**/*.entity.{ts,js}'],
+  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   synchronize: false,
   migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
+  cli: {
+    migrationsDir: "./db/migrations"
+  },
 }));

@@ -7,7 +7,11 @@ import DatabaseConfig from '@/config/database.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({load: [DatabaseConfig]}),
+    ConfigModule.forRoot({
+      load: [DatabaseConfig],
+      isGlobal: true,
+      cache: true
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

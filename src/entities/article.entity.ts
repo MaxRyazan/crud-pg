@@ -1,7 +1,7 @@
 import { Publisher } from '@entities/publisher.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({name: 'articles'})
 export class Article {
 
   @PrimaryGeneratedColumn()

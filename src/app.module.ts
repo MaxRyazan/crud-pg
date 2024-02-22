@@ -17,7 +17,7 @@ import { PublisherModule } from './publisher/publisher.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME') as any,
-        entities: [__dirname + '../dist/**/*.entity.ts'],
+        entities: [__dirname + '/**/*.entity.{ts,js}'],
         synchronize: true
       }),
     }),

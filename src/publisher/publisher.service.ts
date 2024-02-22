@@ -1,26 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
-import { UpdatePublisherDto } from './dto/update-publisher.dto';
+import { Publisher } from '@entities/publisher.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PublisherService {
-  create(createPublisherDto: CreatePublisherDto) {
-    return 'This action adds a new publisher';
-  }
 
-  findAll() {
-    return `This action returns all publisher`;
-  }
+  constructor(
+    @InjectRepository(Publisher)
+    private readonly publisherRepo: Repository<Publisher>) {}
 
-  findOne(id: number) {
-    return `This action returns a #${id} publisher`;
-  }
-
-  update(id: number, updatePublisherDto: UpdatePublisherDto) {
-    return `This action updates a #${id} publisher`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} publisher`;
+  async createPublisher(createPublisherDto: CreatePublisherDto): Promise<CreatePublisherDto> {
+    const publisher: Publisher = new Publisher();
+    Object.assign(publisher, createPublisherDto);
+    return await this.publisherRepo.save(publisher)
   }
 }

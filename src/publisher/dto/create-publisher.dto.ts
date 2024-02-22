@@ -1,1 +1,5 @@
-export class CreatePublisherDto {}
+export class CreatePublisherDto {
+  readonly username: string;
+  readonly email: string;
+  readonly password: string;
+}

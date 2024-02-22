@@ -1,25 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticleModule } from './article/article.module';
 import { PublisherModule } from './publisher/publisher.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import DatabaseConfig from '@/config/database.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({load: [DatabaseConfig]}),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME') as any,
-        entities: [__dirname + '/**/*.entity.{ts,js}'],
-        synchronize: true
-      }),
+      useFactory: (configService: ConfigService) => ({...configService.get('database')}),
     }),
     ArticleModule,
     PublisherModule,

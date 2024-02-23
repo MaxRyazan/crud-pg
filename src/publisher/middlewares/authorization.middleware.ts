@@ -16,7 +16,7 @@ export class AuthorizationMiddleware implements  NestMiddleware {
       return;
     }
 
-    const token = req.headers.authorization
+    const token: string = req.headers.authorization
 
     try {
       const publisherData: any = verify(token, JWT_SECRET);

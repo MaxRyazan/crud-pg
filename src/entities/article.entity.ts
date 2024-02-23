@@ -1,5 +1,5 @@
 import { Publisher } from '@entities/publisher.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({name: 'articles'})
 export class Article {
@@ -13,10 +13,10 @@ export class Article {
   @Column()
   description: string;
 
-  @Column()
-  createdAt: string;
+  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+  created_at: Date;
 
   @ManyToOne(() => Publisher, (publisher) => publisher.articles)
-  author: Publisher
+  author: number
 
 }

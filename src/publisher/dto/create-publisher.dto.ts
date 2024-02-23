@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, NotContains } from 'class-validator';
+import { Unique } from 'typeorm';
 
 export class CreatePublisherDto {
   @IsNotEmpty()

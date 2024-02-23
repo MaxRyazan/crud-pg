@@ -7,6 +7,7 @@ import { Publisher } from '@entities/publisher.entity';
 @Module({
   controllers: [PublisherController],
   providers: [PublisherService],
-  imports: [TypeOrmModule.forFeature([Publisher])]
+  imports: [TypeOrmModule.forFeature([Publisher])],
+  exports: [PublisherService]
 })
 export class PublisherModule {}

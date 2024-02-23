@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { Publisher } from '@entities/publisher.entity';
-import { PublisherService } from '@/publisher/publisher.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from '@entities/article.entity';
@@ -22,4 +21,43 @@ export class ArticleService {
     return await this.articleRepo.save(newArticle);
   }
 
+  async readArticle(id: number): Promise<Article> {
+    const articleFromDb: Article = await this.articleRepo.findOne({where: {id: id}})
+    if(!articleFromDb) {
+      throw new NotFoundException('Article not found')
+    }
+    return articleFromDb;
+  }
+
+
+  async deleteArticle(id: number) {
+    const articleFromDb: Article = await this.articleRepo.findOne({where: {id: id}})
+    if(!articleFromDb) {
+      throw new NotFoundException('Article for delete was not found')
+    }
+    return await this.articleRepo.delete({ id: id })
+  }
+
+
+  async updateArticle(id: number, newData: UpdateArticleDto) {
+    const articleFromDb: Article = await this.articleRepo.findOne({where: {id: id}})
+    if(!articleFromDb) {
+      throw new NotFoundException('Article for update was not found')
+    }
+    return await this.articleRepo.update({ id: id }, {
+      ...newData
+    })
+  }
+
+
+  async findAll(filterName?: keyof Article, filterParam?: any) {
+    if(!filterName || !filterParam) {
+      return this.articleRepo.find()
+    }
+    return this.articleRepo.find({
+      where: {
+        [filterName]: filterParam
+      }
+    })
+  }
 }

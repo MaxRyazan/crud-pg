@@ -12,7 +12,7 @@ export class ArticleController {
   @Post('/new')
   @UseGuards(AuthorizationGuard)
   create(@Body() createArticleDto: CreateArticleDto, @GetPublisher() publisher: Publisher) {
-    return this.articleService.create(createArticleDto);
+    return this.articleService.create(createArticleDto, publisher);
   }
 
 }

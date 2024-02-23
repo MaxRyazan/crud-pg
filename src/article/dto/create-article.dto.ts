@@ -1,1 +1,13 @@
-export class CreateArticleDto {}
+import { IsNotEmpty } from 'class-validator';
+
+export class CreateArticleDto {
+  @IsNotEmpty()
+  readonly name: string
+
+  @IsNotEmpty()
+  readonly description: string
+
+  @IsNotEmpty()
+  readonly articleBody: string
+
+}

@@ -13,6 +13,9 @@ export class Article {
   @Column()
   description: string;
 
+  @Column({name: 'article_body'})
+  articleBody: string
+
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
   created_at: Date;
 

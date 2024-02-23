@@ -13,7 +13,7 @@ export class ArticleController {
 
 
   @Get('/')
-  async getAllArticles(@Query() query: any): Promise<Article[]> {
+  async getAllArticles(@Query() query: any): Promise<{data: Article[], count: number}> {
     const filterBy: string = Object.keys(query)[0];
     return await this.articleService.findAllOrFilter(filterBy, query[filterBy])
   }

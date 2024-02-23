@@ -50,14 +50,22 @@ export class ArticleService {
   }
 
 
-  async findAllOrFilter(filterName?: string, filterParam?: string) {
+  async findAllOrFilter(filterName?: string, filterParam?: string): Promise<{data: Article[], count: number}> {
     if(!filterName || !filterParam) {
-      return this.articleRepo.find()
+      const [result, total] = await this.articleRepo.findAndCount()
+      return {
+        data: result,
+        count: total
+      }
     }
-    return this.articleRepo.find({
+    const [result, total] = await this.articleRepo.findAndCount({
       where: {
         [filterName]: filterParam
       }
     })
+    return {
+      data: result,
+      count: total
+    }
   }
 }

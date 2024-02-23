@@ -50,7 +50,7 @@ export class ArticleService {
   }
 
 
-  async findAll(filterName?: keyof Article, filterParam?: any) {
+  async findAllOrFilter(filterName?: string, filterParam?: string) {
     if(!filterName || !filterParam) {
       return this.articleRepo.find()
     }

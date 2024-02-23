@@ -1,9 +1,9 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import { Publisher } from '@entities/publisher.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { sign } from 'jsonwebtoken'
+import { sign } from 'jsonwebtoken';
 import { JWT_SECRET } from '@/secret-variables';
 import { CreatePublisherResponse } from '@/publisher/types/createPublisherResponse';
 import { LoginPublisherDto } from '@/publisher/dto/login-publisher.dto';
@@ -23,6 +23,7 @@ export class PublisherService {
     }
     const publisher: Publisher = new Publisher();
     Object.assign(publisher, createPublisherDto);
+    publisher.refreshToken = this.generateToken(publisher, 60 * 60 * 24 * 7);
     return await this.publisherRepo.save(publisher)
   }
 
@@ -44,18 +45,18 @@ export class PublisherService {
         id: true,
         username: true,
         email: true,
-        password: false
+        password: false,
+        refreshToken: true
       }})
   }
 
 
-
-  generateToken(publisher: Publisher): string {
+  generateToken(publisher: Publisher, expires: number): string {
     return sign({
       id: publisher.id,
       username: publisher.username,
       email: publisher.email
-    }, JWT_SECRET)
+    }, JWT_SECRET, {expiresIn: expires})
   }
 
   createPublisherResponse(publisher: Publisher): CreatePublisherResponse {
@@ -63,7 +64,21 @@ export class PublisherService {
       id: publisher.id,
       email: publisher.email,
       username: publisher.username,
-      token: this.generateToken(publisher)
+      refreshToken: publisher.refreshToken,
+      token: this.generateToken(publisher, 60*60*24)
     }
+  }
+
+  async refreshTokens(publisher: Publisher, refreshTokenFromCurrentUser: string): Promise<{refreshToken: string, accessToken: string}> {
+    if(publisher.refreshToken === refreshTokenFromCurrentUser) {
+      const newRefresh: string = this.generateToken(publisher, 60*60*24*7)
+      const newAccessToken: string = this.generateToken(publisher, 60*60*24)
+      await this.publisherRepo.update(publisher.id, {refreshToken: newRefresh})
+      return {
+        refreshToken: newRefresh,
+        accessToken: newAccessToken,
+      }
+    }
+    throw new BadRequestException('Wrong refresh token')
   }
 }

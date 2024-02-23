@@ -17,6 +17,9 @@ export class Publisher {
   @Column()
   password: string;
 
+  @Column()
+  refreshToken: string
+
   @OneToMany(() => Article, (article) => article.author)
   articles: Article[]
 

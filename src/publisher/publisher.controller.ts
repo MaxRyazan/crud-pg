@@ -1,9 +1,12 @@
-import { Controller, Post, Body, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { PublisherService } from './publisher.service';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
 import { Publisher } from '@entities/publisher.entity';
 import { CreatePublisherResponse } from '@/publisher/types/createPublisherResponse';
 import { LoginPublisherDto } from '@/publisher/dto/login-publisher.dto';
+import { GetPublisher } from '@/publisher/decorators/publisher.decorator';
+import { GetRefreshTokenDecorator } from '@/publisher/decorators/getRefreshToken.decorator';
+import { AuthorizationGuard } from '@/publisher/guards/authorization.guard';
 
 @Controller('/publisher')
 export class PublisherController {
@@ -21,5 +24,12 @@ export class PublisherController {
   async login(@Body() loginDto: LoginPublisherDto): Promise<CreatePublisherResponse> {
     const publisher: Publisher = await this.publisherService.login(loginDto);
     return this.publisherService.createPublisherResponse(publisher)
+  }
+
+
+  @Post('/refresh-tokens')
+  @UseGuards(AuthorizationGuard)
+  async refreshTokens(@GetPublisher() publisher: Publisher, @GetRefreshTokenDecorator() refreshTokenFromCurrentUser: string) {
+    return this.publisherService.refreshTokens(publisher, refreshTokenFromCurrentUser);
   }
 }

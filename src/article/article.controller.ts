@@ -12,7 +12,6 @@ export class ArticleController {
   @Post('/new')
   @UseGuards(AuthorizationGuard)
   create(@Body() createArticleDto: CreateArticleDto, @GetPublisher() publisher: Publisher) {
-    console.log("publisher", publisher);
     return this.articleService.create(createArticleDto);
   }
 

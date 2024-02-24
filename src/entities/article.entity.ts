@@ -1,4 +1,4 @@
-import { Publisher } from '@entities/publisher.entity';
+import { Publisher } from '../entities/publisher.entity';
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({name: 'articles'})

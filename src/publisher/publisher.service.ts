@@ -1,10 +1,10 @@
 import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { CreatePublisherDto } from './dto/create-publisher.dto';
-import { Publisher } from '@entities/publisher.entity';
+import { Publisher } from '../entities/publisher.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
-import { JWT_SECRET } from '@/secret-variables';
+import { JWT_SECRET } from '../secret-variables';
 import { CreatePublisherResponse } from '@/publisher/types/createPublisherResponse';
 import { LoginPublisherDto } from '@/publisher/dto/login-publisher.dto';
 import { compare } from 'bcrypt';

@@ -20,6 +20,7 @@ import { CPagination } from '@/article/types/custom-pagination';
 import { PaginationResponse } from '@/article/types/pagination-response';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 
+
 @UseInterceptors(CacheInterceptor)
 @Controller('article')
 export class ArticleController {

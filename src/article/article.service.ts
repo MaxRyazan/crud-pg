@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { Publisher } from '@entities/publisher.entity';
@@ -7,12 +7,15 @@ import { Repository } from 'typeorm';
 import { Article } from '@entities/article.entity';
 import { CPagination, Filters } from '@/article/types/custom-pagination';
 import { PaginationResponse } from '@/article/types/pagination-response';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class ArticleService {
   constructor(
     @InjectRepository(Article)
-    private readonly articleRepo: Repository<Article>) {}
+    private readonly articleRepo: Repository<Article>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
+  ) {}
 
 
   async create(createArticleDto: CreateArticleDto, publisher: Publisher) {
@@ -37,6 +40,7 @@ export class ArticleService {
     if(!articleFromDb) {
       throw new NotFoundException('Article for delete was not found')
     }
+    await this.cacheManager.reset();
     return await this.articleRepo.delete({ id: id })
   }
 
@@ -46,6 +50,7 @@ export class ArticleService {
     if(!articleFromDb) {
       throw new NotFoundException('Article for update was not found')
     }
+    await this.cacheManager.reset();
     return await this.articleRepo.update({ id: id }, {
       ...newData
     })

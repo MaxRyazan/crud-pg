@@ -5,7 +5,6 @@ import { Publisher } from '@entities/publisher.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Article } from '@entities/article.entity';
-import { IPaginationOptions, Pagination, paginate } from 'nestjs-typeorm-paginate';
 import { CPagination, Filters } from '@/article/types/custom-pagination';
 import { PaginationResponse } from '@/article/types/pagination-response';
 
@@ -14,11 +13,6 @@ export class ArticleService {
   constructor(
     @InjectRepository(Article)
     private readonly articleRepo: Repository<Article>) {}
-
-
-  async paginate(options: IPaginationOptions): Promise<Pagination<Article>> {
-    return paginate<Article>(this.articleRepo, options);
-  }
 
 
   async create(createArticleDto: CreateArticleDto, publisher: Publisher) {
@@ -59,6 +53,7 @@ export class ArticleService {
 
 
   async findAllOrFilter(options:{filters?: Filters[], limit?: number, page?: number}): Promise<PaginationResponse> {
+    console.log('INSIDE SERVICE');
     if(!options.filters.length) {
       const [result, total] = await this.articleRepo.findAndCount({
         take: options.limit,

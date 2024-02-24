@@ -7,7 +7,7 @@ import {
   Param,
   Delete,
   Patch,
-  Query,
+  Query, UseInterceptors,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -18,8 +18,9 @@ import { Article } from '@entities/article.entity';
 import { UpdateArticleDto } from '@/article/dto/update-article.dto';
 import { CPagination } from '@/article/types/custom-pagination';
 import { PaginationResponse } from '@/article/types/pagination-response';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
-
+@UseInterceptors(CacheInterceptor)
 @Controller('article')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
@@ -27,6 +28,7 @@ export class ArticleController {
 
   @Get('/')
   async getAllArticles(@Query() query: any): Promise<PaginationResponse> {
+    console.log('INSIDE CONTROLLER');
     const options: CPagination = this.articleService.createOptions(query);
     return await this.articleService.findAllOrFilter(options)
   }

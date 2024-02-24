@@ -16,3 +16,7 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: email@mail.ru
       PGADMIN_DEFAULT_PASSWORD: superpassword
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"

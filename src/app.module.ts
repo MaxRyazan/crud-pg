@@ -5,6 +5,8 @@ import { PublisherModule } from './publisher/publisher.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import DatabaseConfig from '@/config/database.config';
 import { AuthorizationMiddleware } from '@/publisher/middlewares/authorization.middleware';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 
 @Module({
   imports: [
@@ -17,6 +19,13 @@ import { AuthorizationMiddleware } from '@/publisher/middlewares/authorization.m
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({...configService.get('database')}),
+    }),
+    CacheModule.register({
+      ttl: 90 * 1000,
+      isGlobal: true,
+      store: redisStore,
+      host: 'redis',
+      port: "6379"
     }),
     ArticleModule,
     PublisherModule,

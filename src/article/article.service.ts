@@ -53,7 +53,6 @@ export class ArticleService {
 
 
   async findAllOrFilter(options:{filters?: Filters[], limit?: number, page?: number}): Promise<PaginationResponse> {
-    console.log('INSIDE SERVICE');
     if(!options.filters.length) {
       const [result, total] = await this.articleRepo.findAndCount({
         take: options.limit,

@@ -28,7 +28,6 @@ export class ArticleController {
 
   @Get('/')
   async getAllArticles(@Query() query: any): Promise<PaginationResponse> {
-    console.log('INSIDE CONTROLLER');
     const options: CPagination = this.articleService.createOptions(query);
     return await this.articleService.findAllOrFilter(options)
   }

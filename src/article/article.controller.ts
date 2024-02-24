@@ -1,4 +1,14 @@
-import { Controller, Post, Body, UseGuards, Get, Param, Delete, Patch, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Param,
+  Delete,
+  Patch,
+  Query,
+} from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { GetPublisher } from '@/publisher/decorators/publisher.decorator';
@@ -6,6 +16,9 @@ import { Publisher } from '@entities/publisher.entity';
 import { AuthorizationGuard } from '@/publisher/guards/authorization.guard';
 import { Article } from '@entities/article.entity';
 import { UpdateArticleDto } from '@/article/dto/update-article.dto';
+import { CPagination } from '@/article/types/custom-pagination';
+import { PaginationResponse } from '@/article/types/pagination-response';
+
 
 @Controller('article')
 export class ArticleController {
@@ -13,9 +26,9 @@ export class ArticleController {
 
 
   @Get('/')
-  async getAllArticles(@Query() query: any): Promise<{data: Article[], count: number}> {
-    const filterBy: string = Object.keys(query)[0];
-    return await this.articleService.findAllOrFilter(filterBy, query[filterBy])
+  async getAllArticles(@Query() query: any): Promise<PaginationResponse> {
+    const options: CPagination = this.articleService.createOptions(query);
+    return await this.articleService.findAllOrFilter(options)
   }
 
   @Post('/new')

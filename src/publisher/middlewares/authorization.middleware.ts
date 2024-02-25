@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { ShareRequestExpress } from '@/publisher/types/ShareRequestExpress';
+import { SharedRequestExpress } from '@/publisher/types/SharedRequestExpress';
 import { NextFunction, Response } from 'express';
 import { PublisherService } from '@/publisher/publisher.service';
 import { verify } from 'jsonwebtoken';
@@ -9,14 +9,14 @@ import { JWT_SECRET } from '@/secret-variables';
 export class AuthorizationMiddleware implements  NestMiddleware {
   constructor(private readonly publisherService: PublisherService) {}
 
-  async use(req: ShareRequestExpress, res: Response, next: NextFunction) {
-    if(!req.headers.authorization) {
+  async use(req: SharedRequestExpress, res: Response, next: NextFunction) {
+    if(!req.headers.authorization && !req.headers.refreshtoken) {
       req.publisher = null;
       next();
       return;
     }
 
-    const token: string = req.headers.authorization
+    const token: string = req.headers.authorization ?? req.headers.refreshtoken
 
     try {
       const publisherData: any = verify(token, JWT_SECRET);

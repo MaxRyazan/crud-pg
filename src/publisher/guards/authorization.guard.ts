@@ -1,10 +1,10 @@
 import { CanActivate, ExecutionContext, HttpException, Injectable } from '@nestjs/common';
-import { ShareRequestExpress } from '@/publisher/types/ShareRequestExpress';
+import { SharedRequestExpress } from '@/publisher/types/SharedRequestExpress';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const request: ShareRequestExpress = context.switchToHttp().getRequest();
+    const request: SharedRequestExpress = context.switchToHttp().getRequest();
     if(request.publisher) {
       return true;
     }

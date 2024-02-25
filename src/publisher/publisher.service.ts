@@ -7,7 +7,7 @@ import { sign } from 'jsonwebtoken';
 import { JWT_SECRET } from '../secret-variables';
 import { CreatePublisherResponse } from '@/publisher/types/createPublisherResponse';
 import { LoginPublisherDto } from '@/publisher/dto/login-publisher.dto';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 
 @Injectable()
 export class PublisherService {
@@ -23,21 +23,23 @@ export class PublisherService {
     }
     const publisher: Publisher = new Publisher();
     Object.assign(publisher, createPublisherDto);
-    publisher.refreshToken = this.generateToken(publisher, 60 * 60 * 24 * 7);
+    publisher.refreshToken = await hash(this.generateToken(publisher, 60 * 60 * 24 * 7), 10);
     return await this.publisherRepo.save(publisher)
   }
 
-  async login(loginDto: LoginPublisherDto): Promise<Publisher>{
+  async login(loginDto: LoginPublisherDto): Promise<Publisher> {
     const publisher: Publisher = await this.publisherRepo.findOne({where: {email: loginDto.email}})
     if(!publisher) {
       throw new HttpException('Wrong credentials!', 404)
     }
-    const isPasswordCompare = await compare(loginDto.password, publisher.password)
+    const isPasswordCompare: boolean = await compare(loginDto.password, publisher.password)
     if(!isPasswordCompare) {
       throw new HttpException('Wrong credentials!', 404)
     }
-    publisher.refreshToken = this.generateToken(publisher, 60 * 60 * 24 * 7);
+    const planeRefreshToken: string = this.generateToken(publisher, 60 * 60 * 24 * 7)
+    publisher.refreshToken = await hash(planeRefreshToken, 10);
     await this.publisherRepo.update({id: publisher.id}, { ...publisher })
+    publisher.refreshToken = planeRefreshToken;
     return publisher;
   }
 
@@ -72,7 +74,7 @@ export class PublisherService {
   }
 
   async refreshTokens(publisher: Publisher, refreshTokenFromCurrentUser: string): Promise<{refreshToken: string, accessToken: string}> {
-    if(publisher.refreshToken === refreshTokenFromCurrentUser) {
+    if(await compare(refreshTokenFromCurrentUser, publisher.refreshToken)) {
       const newRefresh: string = this.generateToken(publisher, 60*60*24*7)
       const newAccessToken: string = this.generateToken(publisher, 60*60*24)
       await this.publisherRepo.update(publisher.id, {refreshToken: newRefresh})

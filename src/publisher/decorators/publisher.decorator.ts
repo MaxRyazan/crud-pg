@@ -1,11 +1,11 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { ShareRequestExpress } from '@/publisher/types/ShareRequestExpress';
+import { SharedRequestExpress } from '@/publisher/types/SharedRequestExpress';
 import { Publisher } from '@entities/publisher.entity';
 
 
 
 export const GetPublisher = createParamDecorator((data: string, ctx: ExecutionContext): null | keyof Publisher | Publisher => {
-  const request: ShareRequestExpress = ctx.switchToHttp().getRequest();
+  const request: SharedRequestExpress = ctx.switchToHttp().getRequest();
 
   if(!request.publisher) {
     return null;

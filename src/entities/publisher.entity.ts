@@ -1,5 +1,5 @@
 import { Article } from '../entities/article.entity';
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import {hash} from 'bcrypt'
 
 @Entity({name: 'publishers'})

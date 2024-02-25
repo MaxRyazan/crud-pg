@@ -18,10 +18,9 @@ export class ArticleService {
   ) {}
 
 
-  async create(createArticleDto: CreateArticleDto, publisher: Publisher) {
+  async create(createArticleDto: CreateArticleDto) {
     const newArticle = {
       ...createArticleDto,
-      author: publisher.id
     }
     return await this.articleRepo.save(newArticle);
   }

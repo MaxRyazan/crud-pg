@@ -104,7 +104,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"article1\",\r\n    \"description\": \"some description\",\r\n    \"createdAt\": \"123123\",\r\n    \"articleBody\": \"someBody\",\r\n    \"authorId\": 1\r\n}",
+					"raw": "{\r\n    \"name\": \"article3\",\r\n    \"description\": \"some description\",\r\n    \"createdAt\": \"123123\",\r\n    \"articleBody\": \"someBody\",\r\n    \"authorId\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -220,8 +220,7 @@
 					{
 						"key": "Authorization",
 						"value": "{{accessToken}}",
-						"type": "text",
-						"disabled": true
+						"type": "text"
 					}
 				],
 				"body": {

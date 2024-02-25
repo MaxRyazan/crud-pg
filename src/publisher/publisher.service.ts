@@ -36,6 +36,8 @@ export class PublisherService {
     if(!isPasswordCompare) {
       throw new HttpException('Wrong credentials!', 404)
     }
+    publisher.refreshToken = this.generateToken(publisher, 60 * 60 * 24 * 7);
+    await this.publisherRepo.update({id: publisher.id}, { ...publisher })
     return publisher;
   }
 
